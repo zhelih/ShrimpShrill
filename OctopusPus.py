@@ -34,7 +34,12 @@ def getSearch(string, count):
         since_id = 0
         while True:
             result = oauth_req(getSearchQuery(string, count, since_id), API_KEY, API_SECRET)
-            result = json.loads(result)['statuses']
+            try:
+                result = json.loads(result)['statuses']
+            except KeyError:
+                print result
+                result = []
+                
             if result:
                 since_id = result[0]['id']
             yield result
