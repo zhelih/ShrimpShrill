@@ -194,6 +194,35 @@ def add_pending():
     g_pending.append(pending)
     return jsonify(pending.dictify()), 201
     
+@app.route('/ers/post_emergency', methods=['POST'])
+def add_selfemergency():
+    global g_emergencies
+    if not request.json:
+        abort(400)
+    
+    pending = Pending()
+    pending.m_user   = request.json['user']
+    pending.m_date   = request.json['date']
+    pending.m_source = request.json['source']
+    
+    pending.m_text = request.json['text']
+    
+    print request.json
+    if request.json.get('location', None):
+        location = Location()
+        loc_json = request.json['location']
+        location.m_latitude  = loc_json.get('latitude', None)
+        location.m_longitude = loc_json.get('longitude', None)
+        pending.m_location = location
+        
+    emergency = Emergency(pending)
+    emergency.m_level = request.json['level']
+    emergency.m_approved = request.json['date']
+    emergency.m_approver = 2
+
+    g_emergencies.append(emergency)
+    return jsonify(emergency.dictify()), 201
+
 @app.route('/ers/pending/<int:pending_id>', methods=['GET'])
 def get_pending(pending_id):
     pending = [pending for pending in g_pending if pending.m_id == pending_id]
@@ -207,7 +236,7 @@ def get_pending(pending_id):
 def get_next_pending():
     global g_pending
     if not g_pending:
-        return jsonify({'ok':False, 'desc':'Pending queue is empty'}), 201
+        return jsonify({'ok': False, 'desc':'Pending queue is empty'}), 201
     pending = g_pending[0]
     g_pending = g_pending[1:]
     g_waiting_pending[pending.m_id] = pending
