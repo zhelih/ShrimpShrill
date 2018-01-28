@@ -76,4 +76,4 @@ def run(keyword, count, timeout = 10):
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
-    run("cat", 5, timeout = 20)
+    run(sys.argv[1], int(sys.argv[2]), timeout = sys.argv[3])
