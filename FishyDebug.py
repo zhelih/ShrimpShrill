@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/ers/post_emergency', methods=['POST', 'GET'])
 def main():
     print("Headers", request.headers)
-    print("User Agent", request.headers['User-Agent'])
+    print("User Agent", request.headers.get('User-Agent', None))
     print("Content length", request.content_length)
     print("Content type", request.content_type)
     print("Data", request.get_data())
