@@ -179,6 +179,7 @@ def add_pending():
     pending.m_text = request.json.get('text', None)
     pending.m_link = request.json.get('link', None)
     
+    print request.json
     if request.json.get('location', None):
         location = Location()
         loc_json = request.json['location']
@@ -263,7 +264,7 @@ def get_geodata():
                 "approver": emergency.approvedBy(),
                 "approved": emergency.approvedOn()
             }
-        } for emergency in g_emergencies
+        } for emergency in g_emergencies if emergency.location()
     ]
     
     return "{}".format(json.dumps(resp)), 201
