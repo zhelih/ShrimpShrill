@@ -63,8 +63,11 @@ def sendTweet(tweet):
     response = requests.post(URL, data = json.dumps(query), headers = header);
 
 def sendTweets(tweets):
-    for tweet in tweets:
-        sendTweet(tweet)
+    try:
+        for tweet in tweets:
+            sendTweet(tweet)
+    except requests.exceptions.ConnectionError:
+        print "Looks like FishingboatBloat is down"
 
 def run(keyword, count, timeout = 10):
     generator = getSearch(keyword, count)
@@ -76,4 +79,4 @@ def run(keyword, count, timeout = 10):
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
-    run(sys.argv[1], int(sys.argv[2]), timeout = sys.argv[3])
+    run(sys.argv[1], int(sys.argv[2]), timeout = int(sys.argv[3]))
