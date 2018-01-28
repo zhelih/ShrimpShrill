@@ -112,7 +112,7 @@ class Emergency:
         return self.m_pending.user()
     
     def text(self):
-        return self.m_pending.user()
+        return self.m_pending.text()
         
     def link(self):
         return self.m_pending.link()
