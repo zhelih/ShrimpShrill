@@ -290,6 +290,7 @@ def get_geodata():
                 ]
             },
             "properties": {
+                "text": emergency.text(),
                 "level": emergency.level(),
                 "approver": emergency.approvedBy(),
                 "approved": emergency.approvedOn()
