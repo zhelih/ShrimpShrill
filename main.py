@@ -58,6 +58,7 @@ class Pending:
         return self.m_date
         
     def location(self):
+        print "kabaabba"
         return self.m_location
         
     def source(self):
@@ -122,6 +123,7 @@ class Emergency:
         
     def location(self):
         if self.m_location:
+            print "pewwew"
             return self.m_location
         return self.m_pending.location()
         
@@ -179,15 +181,18 @@ def add_pending():
     pending.m_text = request.json.get('text', None)
     pending.m_link = request.json.get('link', None)
     
-    location = Location()
-    location.m_state     = request.json.get('state', None)
-    location.m_city      = request.json.get('city', None)
-    location.m_street    = request.json.get('street', None)
-    location.m_building  = request.json.get('building', None)
-    location.m_latitude  = request.json.get('latitude', None)
-    location.m_longitude = request.json.get('longitude', None)
-    
-    pending.m_location = location
+    if request.json.get('location', None):
+        location = Location()
+        loc_json = request.json['location']
+        location.m_state     = loc_json.get('state', None)
+        location.m_city      = loc_json.get('city', None)
+        location.m_street    = loc_json.get('street', None)
+        location.m_building  = loc_json.get('building', None)
+        location.m_latitude  = loc_json.get('latitude', None)
+        location.m_longitude = loc_json.get('longitude', None)
+        pending.m_location = location
+        
+    print(location.m_latitude)
     g_pending.append(pending)
     return jsonify(pending.dictify()), 201
     
@@ -246,10 +251,25 @@ def approve_pending(pending_id):
 def get_geodata():
     global g_emergencies
     resp = {"type":"FeatureCollection"}
-    resp["features"] = [ {"type": "Feature", "geometry": { "type":"Point", "coordinates": [emergency.location().latitude(), emergency.location().longitude()] } } for emergency in g_emergencies];
+    resp["features"] = [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type":"Point",
+                "coordinates": [
+                    emergency.location().latitude(),
+                    emergency.location().longitude()
+                ],
+                "properties": {
+                    "level": emergency.level(),
+                    "approver": emergency.approvedBy(),
+                    "approved": emergency.approvedOn()
+                }
+            }
+        } for emergency in g_emergencies
+    ]
     
-    response = "eqfeed_callback({})".format(json.dumps(resp))
-    return Response(response), 201
+    return "{}".format(json.dumps(resp)), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
