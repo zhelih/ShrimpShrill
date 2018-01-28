@@ -52,7 +52,7 @@ class Pending:
         return self.m_text
         
     def link(self):
-        return self.m_text
+        return self.m_link
         
     def date(self):
         return self.m_date
@@ -292,6 +292,7 @@ def get_geodata():
             "properties": {
                 "text": emergency.text(),
                 "level": emergency.level(),
+                "url" : emergency.link(),
                 "approver": emergency.approvedBy(),
                 "approved": emergency.approvedOn()
             }
