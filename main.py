@@ -58,7 +58,6 @@ class Pending:
         return self.m_date
         
     def location(self):
-        print "kabaabba"
         return self.m_location
         
     def source(self):
@@ -123,7 +122,6 @@ class Emergency:
         
     def location(self):
         if self.m_location:
-            print "pewwew"
             return self.m_location
         return self.m_pending.location()
         
@@ -192,7 +190,6 @@ def add_pending():
         location.m_longitude = loc_json.get('longitude', None)
         pending.m_location = location
         
-    print(location.m_latitude)
     g_pending.append(pending)
     return jsonify(pending.dictify()), 201
     
@@ -257,14 +254,14 @@ def get_geodata():
             "geometry": {
                 "type":"Point",
                 "coordinates": [
-                    emergency.location().latitude(),
-                    emergency.location().longitude()
-                ],
-                "properties": {
-                    "level": emergency.level(),
-                    "approver": emergency.approvedBy(),
-                    "approved": emergency.approvedOn()
-                }
+                    emergency.location().longitude(),
+                    emergency.location().latitude()
+                ]
+            },
+            "properties": {
+                "level": emergency.level(),
+                "approver": emergency.approvedBy(),
+                "approved": emergency.approvedOn()
             }
         } for emergency in g_emergencies
     ]
