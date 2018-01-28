@@ -203,7 +203,7 @@ def add_selfemergency():
     pending = Pending()
     pending.m_user   = request.json['user']
     pending.m_date   = request.json['date']
-    pending.m_source = request.json['source']
+    pending.m_source = 1
     
     pending.m_text = request.json['text']
     
