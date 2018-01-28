@@ -196,6 +196,7 @@ def add_pending():
     
 @app.route('/ers/post_emergency', methods=['POST'])
 def add_selfemergency():
+    print request
     global g_emergencies
     if not request.json:
         abort(400)
